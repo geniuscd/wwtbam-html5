@@ -13,6 +13,7 @@ $(document).ready(function(){
 	var phone = $("#help .phone img");
 	var phone_toggle = false;
 	var audio = null;
+	var hello_container = $(".hello");
 
 	// game variables
 	var isSelected = false;
@@ -20,6 +21,7 @@ $(document).ready(function(){
 	var answer_index = null;
 	var current_question_index = 0;
 	drawQuestion(questions[current_question_index]);
+	var display_hello = true;
 
 	function drawAnswers (answers) {
 		answer_1.html(answers[0].answer);
@@ -58,7 +60,12 @@ $(document).ready(function(){
 		audio = new Audio("./sounds/" + file_name);
 		audio.play();
 	}
-				all_answers.removeClass('selected correct');
+
+	function updateHelloVisibility (bool) {
+		hello_container.css('opacity', bool ? 1 : 0);
+	}
+
+	all_answers.removeClass('selected correct');
 
 	// controles
 	$( "body" ).keyup(function(e ) {
@@ -129,6 +136,7 @@ $(document).ready(function(){
 					current_question_index += 1;
 					drawQuestion(questions[current_question_index]);
 				}
+				playAudio("lights_down_3.mp3");
 			break;
 
 			case 37: // left Arrow // previous question
@@ -138,6 +146,7 @@ $(document).ready(function(){
 					current_question_index -= 1;
 					drawQuestion(questions[current_question_index]);
 				}
+				playAudio("lights_down_3.mp3");
 			break;
 
 			case 73: // i // phone
@@ -197,6 +206,17 @@ $(document).ready(function(){
 
 			case 76 : // L to play the sound of selected answer
 				playAudio('final_answer_1.mp3');
+			break;
+
+			case 72 : // H to play the sound of Hello
+				if(display_hello)
+					playAudio('hello_long.mp3');
+
+				setTimeout(function(){
+					updateHelloVisibility(display_hello);
+				},8000);
+
+					display_hello = !display_hello;
 			break; 
 
 		}
