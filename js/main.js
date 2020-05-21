@@ -44,6 +44,10 @@ $(document).ready(function(){
 		isSelected = false;
 		selected_answer = null;
 		answer_index = null;
+		answer_1.css('opacity', 1);
+		answer_2.css('opacity', 1);
+		answer_3.css('opacity', 1);
+		answer_4.css('opacity', 1);
 		resetAudio(audio);
 	}
 
@@ -54,22 +58,24 @@ $(document).ready(function(){
 		audio = new Audio("./sounds/" + file_name);
 		audio.play();
 	}
+				all_answers.removeClass('selected correct');
 
 	// controles
 	$( "body" ).keyup(function(e ) {
-		all_answers.removeClass('selected correct');
 		switch (e.keyCode) {
 			case 49: // 1
+				all_answers.removeClass('selected correct');
 				answer_1.addClass('selected');
 				isSelected = true;
 				selected_answer = {...questions[current_question_index].answers[0]};
 				answer_index = 0;	
 
-				playAudio("ata_start.mp3");
+				// playAudio("ata_start.mp3");
 
 			break;
 
 			case 50: // 2
+				all_answers.removeClass('selected correct');
 				answer_2.addClass('selected');
 				isSelected = true;
 				selected_answer = {...questions[current_question_index].answers[1]};
@@ -77,6 +83,7 @@ $(document).ready(function(){
 			break;
 
 			case 51: // 3
+				all_answers.removeClass('selected correct');
 				answer_3.addClass('selected');
 				isSelected = true;
 				selected_answer = {...questions[current_question_index].answers[2]};
@@ -84,6 +91,7 @@ $(document).ready(function(){
 			break;
 
 			case 52: // 4
+				all_answers.removeClass('selected correct');
 				answer_4.addClass('selected');
 				isSelected = true;
 				selected_answer = {...questions[current_question_index].answers[3]};
@@ -101,12 +109,21 @@ $(document).ready(function(){
 								case "2": answer_3.addClass('correct'); break;
 								case "3": answer_4.addClass('correct'); break;
 							}
+
+							// play the loose or win sound
+							if(answer_index == index)
+								playAudio("q1_to_q4_correct.mp3");
+							else
+								playAudio("q1_to_q5_lose.mp3");
+
+
 						}
 					}
 				}
 			break;
 
 			case 39: // right Arrow // next question
+				all_answers.removeClass('selected correct');
 				resetVariables();
 				if(current_question_index < questions.length-1){
 					current_question_index += 1;
@@ -115,6 +132,7 @@ $(document).ready(function(){
 			break;
 
 			case 37: // left Arrow // previous question
+				all_answers.removeClass('selected correct');
 				resetVariables();
 				if(current_question_index > 0) {
 					current_question_index -= 1;
@@ -152,6 +170,34 @@ $(document).ready(function(){
 				else
 					friends.attr('src','./images/ata.png');
 			break;
+
+			case 75 : //k 50:50 erase answers
+				var available_to_delete = [];
+
+				for(var index in questions[current_question_index].answers){
+					const answer_row = questions[current_question_index].answers[index];
+					if(!answer_row.correct)
+						available_to_delete.push(index);
+				}
+				const shuffled = available_to_delete.sort(() => 0.5 - Math.random());
+				let selected_anwers = shuffled.slice(0, 2);
+				for (var index in selected_anwers) {
+
+					switch(selected_anwers[index]){
+						case "0": answer_1.css('opacity', 0); break;
+						case "1": answer_2.css('opacity', 0); break;
+						case "2": answer_3.css('opacity', 0); break;
+						case "3": answer_4.css('opacity', 0); break;
+					}
+					
+				}
+				playAudio('fifty_fifty.mp3');
+
+			break;
+
+			case 76 : // L to play the sound of selected answer
+				playAudio('final_answer_1.mp3');
+			break; 
 
 		}
 		
